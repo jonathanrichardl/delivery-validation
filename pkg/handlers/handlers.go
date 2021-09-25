@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"news/pkg/database"
-	"news/pkg/logger"
-	"news/pkg/router"
+	"delivery-validation/pkg/database"
+	"delivery-validation/pkg/logger"
+	"delivery-validation/pkg/router"
+	"net/http"
 )
 
 type HTTPHandler struct {
@@ -21,13 +22,13 @@ func NewHttpHandlers(DatabaseInstance *database.DBInstance, RouterInstance *rout
 }
 
 func (h *HTTPHandler) RegisterAllHandlers() {
-	h.Router.RegisterHandler("/news", h.AddNewsHandler, "POST")
-	h.Router.RegisterHandler("/news", h.GetAllNewsHandler, "GET")
-	h.Router.RegisterHandler("/news/{title}", h.GetNewsByTitleHandler, "GET")
-	h.Router.RegisterHandler("/news/{title}", h.DeleteNewsHandler, "DELETE")
-	h.Router.RegisterHandler("/news/{title}", h.ModifyNewsHandler, "PATCH")
-	h.Router.RegisterHandler("/news/{title}/tags", h.AddNewTags, "POST")
-	h.Router.RegisterHandler("/news/{title}/tags/{tags}", h.RemoveTags, "DELETE")
-	h.Router.RegisterHandler("/news/topic/{topic}", h.GetNewsByTopicHandler, "GET")
-	h.Router.RegisterHandler("/news/status/{status}", h.GetNewsByStatusHandler, "GET")
+	h.Router.RegisterHandler("/", h.Index, "GET")
+	h.Router.RegisterHandler("/deliveries", h.GetStatusOfAllOrders, "GET")
+	//h.Router.RegisterHandler("/deliveries", h.AddNewOrder, "POST")
+	h.Router.RegisterHandler("/deliveries/id={id}", h.GetStatusOfOrder, "GET")
+	//h.Router.RegisterHandler("/deliveries/id={id}", h.PostUpdateOnDelivery, "POST")
+}
+
+func (h *HTTPHandler) Index(w http.ResponseWriter, r *http.Request) {
+
 }

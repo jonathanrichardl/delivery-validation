@@ -1,22 +1,14 @@
-USE testers;
-drop table tags;
-drop table news;
-drop table deleted;
-CREATE TABLE news(
+use testers;
+CREATE TABLE orders(
 id integer PRIMARY KEY AUTO_INCREMENT,
-title varchar(45),
-topic varchar(25),
-status varchar(12)
+title varchar(50)
 );
 
-CREATE TABLE tags(
-tags varchar(20),
-news_id integer,
-FOREIGN KEY(news_id) REFERENCES news(id)
-);
-
-CREATE TABLE deleted(
-    id integer,
-    title varchar(45)
+CREATE TABLE requirements(
+question varchar(50),
+answer varchar(50),
+order_id integer,
+status bool,
+FOREIGN KEY(order_id) REFERENCES orders(id)
 );
 

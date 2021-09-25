@@ -1,92 +1,38 @@
 package handlers
 
 import (
+	"delivery-validation/pkg/database"
+	"delivery-validation/pkg/models"
 	"fmt"
-	"log"
-	"news/pkg/database"
-	"news/pkg/models"
 )
 
-/*
-For converting SQL raw data into Go types
-*/
-func (h *HTTPHandler) getTagsofNews(news *models.News) {
-	retrievedTags, err := h.database.RetrieveData(fmt.Sprintf("SELECT tags FROM tags WHERE news_id = (SELECT id FROM news WHERE title = '%s');", news.Title))
+func (h *HTTPHandler) retrieveRequirements(order *models.Orders, id int) {
+	retrievedRequirements, err := h.database.RetrieveData(fmt.Sprintf("SELECT * FROM requirements WHERE order_id = %d", id))
 	if err != nil {
-		log.Println("Error retrieving tags : ", err.Error())
-	}
-	for retrievedTags.Data.Next() {
-		var tags string
-		err = retrievedTags.Data.Scan(&tags)
-		if err != nil {
-			log.Println("Error scanning tags: ", err.Error())
-		}
-		news.Tags = append(news.Tags, tags)
+		h.logger.ErrorLogger.Println("Error retrieving order requirement from SQL: ", err.Error())
 	}
 
+	for retrievedRequirements.Data.Next() {
+		var requirement models.Requirements
+		err := retrievedRequirements.Data.Scan(&requirement.Status, &requirement.ExpectedOutcome, &requirement.Reqest)
+		if err != nil {
+			h.logger.ErrorLogger.Println("Error retrieving order requirement: ", err.Error())
+		}
+		order.Requirements = append(order.Requirements, requirement)
+
+	}
 }
 
-func (h *HTTPHandler) retrieveNews(retrievedData *database.RetrievedData) []models.News {
-	var response []models.News
+func (h *HTTPHandler) retrieveOrders(retrievedData *database.RetrievedData) []models.Orders {
+	var response []models.Orders
 	for retrievedData.Data.Next() {
-		var each models.News
-		err := retrievedData.Data.Scan(&each.Title, &each.Topic, &each.Status)
+		var each models.Orders
+		err := retrievedData.Data.Scan(&each.Id, &each.Title)
 		if err != nil {
-			log.Println("Error retrieving sql  ", err.Error())
+			h.logger.ErrorLogger.Println("Error retrieving data: ", err.Error())
 		}
-
-		h.getTagsofNews(&each)
+		h.retrieveRequirements(&each, each.Id)
 		response = append(response, each)
 	}
 	return response
-}
-
-/*
-For Modifying purposes
-*/
-
-func (h *HTTPHandler) modifyTopic(newsTitle string, newTopic *string) {
-	err := h.database.UpdateData(fmt.Sprintf("UPDATE news SET topic = '%s' WHERE title = '%s';", *newTopic, newsTitle))
-	if err != nil {
-		log.Println("Error updating title : ", err.Error())
-	}
-}
-
-func (h *HTTPHandler) modifyTags(newsTitle string, newTags *[]string) {
-	err := h.database.DeleteData(fmt.Sprintf("DELETE FROM tags WHERE news_id = (SELECT id FROM news WHERE title = '%s');", newsTitle))
-	if err != nil {
-		log.Println("Error removing tags : ", err.Error())
-	}
-	h.addTags(newsTitle, *newTags)
-
-}
-
-func (h *HTTPHandler) modifyTitle(previousTitle string, newTitle *string) {
-	err := h.database.UpdateData(fmt.Sprintf("UPDATE news SET title = '%s' WHERE title = '%s';", *newTitle, previousTitle))
-	if err != nil {
-		log.Println("Error updating title : ", err.Error())
-	}
-}
-
-func (h *HTTPHandler) modifyStatus(newsTitle string, newStatus *string) {
-	err := h.database.UpdateData(fmt.Sprintf("UPDATE news SET status = '%s' WHERE title = '%s';", *newStatus, newsTitle))
-	if err != nil {
-		log.Println("Error updating title : ", err.Error())
-	}
-}
-
-func (h *HTTPHandler) addTags(newsTitle string, tags []string) {
-	for _, tag := range tags {
-		err := h.database.AddData(fmt.Sprintf("INSERT INTO tags (Tags,news_id) VALUES ('%s', (SELECT id from news WHERE title = '%s')); ", tag, newsTitle))
-		if err != nil {
-			log.Println("Error adding tags: ", err.Error())
-		}
-	}
-}
-
-func (h *HTTPHandler) deleteTags(newsTitle string, tags string) {
-	err := h.database.DeleteData(fmt.Sprintf("DELETE FROM tags WHERE tags = '%s'AND news_id = (SELECT id FROM news WHERE title = '%s');", tags, newsTitle))
-	if err != nil {
-		log.Println("Error removing tags: ", err.Error())
-	}
 }
