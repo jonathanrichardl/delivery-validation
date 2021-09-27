@@ -1,16 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"news/pkg/database"
-	"news/pkg/handlers"
-	logger "news/pkg/logger"
-	"news/pkg/router"
+
+	"delivery-validation/pkg/handlers"
+
+	"delivery-validation/pkg/database"
+	logger "delivery-validation/pkg/logger"
+	"delivery-validation/pkg/router"
 )
 
 func main() {
-	Logger := logger.NewLogger("log.txt")
-	Logger.InfoLogger.Println("Reading database configuration")
+	logger := logger.NewLogger("log.txt")
+	logger.InfoLogger.Println("Reading database configuration")
 	/*
 		databaseConfig, err := config.LoadDatabaseConfiguration()
 		if err != nil {
@@ -19,21 +22,23 @@ func main() {
 		}
 	*/
 	//initializing db and router
-	Logger.InfoLogger.Println("Initializing Program")
+	logger.InfoLogger.Println("Initializing Program")
 	/*
 		Database, err := database.NewDatabase("mysql",
 			databaseConfig.Username, databaseConfig.Password, databaseConfig.Address,
 			databaseConfig.DatabaseName)
 	*/
-	Database, err := database.NewDatabase("mysql",
+	database, err := database.NewDatabase("mysql",
 		"root", "123jonathan123100300!!!", "localhost:3306",
 		"testers")
+
 	if err != nil {
 		log.Printf("Error received : %s\n", err.Error())
 		return
 	}
-	Router := router.NewRouterInstance()
-	handlers := handlers.NewHttpHandlers(Database, Router, Logger)
+	router := router.NewRouterInstance()
+	handlers := handlers.NewHttpHandlers(database, router, logger)
 	handlers.RegisterAllHandlers()
-	Router.Start()
+	fmt.Println("Server starting at localhost:8080")
+	router.Start()
 }

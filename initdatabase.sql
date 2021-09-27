@@ -1,12 +1,16 @@
 use testers;
+drop table requirements;
+drop table orders;
+
 CREATE TABLE orders(
-id integer PRIMARY KEY AUTO_INCREMENT,
+id integer PRIMARY KEY,
 title varchar(50)
 );
 
 CREATE TABLE requirements(
-question varchar(50),
-answer varchar(50),
+requirementid integer PRIMARY KEY AUTO_INCREMENT,
+request varchar(50),
+expectedoutcome varchar(50),
 order_id integer,
 status bool,
 FOREIGN KEY(order_id) REFERENCES orders(id)
