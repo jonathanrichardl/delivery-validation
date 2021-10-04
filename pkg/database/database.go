@@ -2,10 +2,10 @@ package database
 
 import (
 	"database/sql"
+	mysql "delivery-validation/pkg/database/mysql"
 	"errors"
 	"fmt"
 	"log"
-	mysql "news/pkg/database/mysql"
 	"strings"
 )
 

@@ -58,3 +58,12 @@ INFO: 2021/09/27 12:55:26 main.go:24: Initializing Program
 INFO: 2021/09/27 13:02:08 main.go:16: Reading database configuration
 INFO: 2021/09/27 13:02:08 main.go:25: Initializing Program
 INFO: 2021/09/27 13:03:45 modify_deliveries.go:14: New order received
+INFO: 2021/09/27 16:33:00 main.go:16: Reading database configuration
+INFO: 2021/09/27 16:33:00 main.go:27: Initializing Program
+INFO: 2021/09/27 16:34:53 modify_deliveries.go:14: New order received
+INFO: 2021/10/01 21:58:16 main.go:16: Reading database configuration
+INFO: 2021/10/01 21:58:17 main.go:27: Initializing Program
+INFO: 2021/10/01 22:01:05 modify_deliveries.go:14: New order received
+INFO: 2021/10/02 23:32:35 main.go:16: Reading database configuration
+INFO: 2021/10/02 23:32:35 main.go:27: Initializing Program
+INFO: 2021/10/02 23:34:17 modify_deliveries.go:14: New order received

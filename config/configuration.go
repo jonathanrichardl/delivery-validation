@@ -19,6 +19,6 @@ func LoadDatabaseConfiguration() (databaseConfig, error) {
 
 }
 
-func GetPort() string{
- 	return os.Getenv("PORT")
+func LoadPort() string {
+	return os.Getenv("PORT")
 }

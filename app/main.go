@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"delivery-validation/pkg/handlers"
-
+	config "delivery-validation/config"
 	"delivery-validation/pkg/database"
+	"delivery-validation/pkg/handlers"
 	logger "delivery-validation/pkg/logger"
 	"delivery-validation/pkg/router"
 )
@@ -14,6 +14,7 @@ import (
 func main() {
 	logger := logger.NewLogger("log.txt")
 	logger.InfoLogger.Println("Reading database configuration")
+
 	/*
 		databaseConfig, err := config.LoadDatabaseConfiguration()
 		if err != nil {
@@ -21,13 +22,16 @@ func main() {
 			return
 		}
 	*/
+
 	//initializing db and router
 	logger.InfoLogger.Println("Initializing Program")
+
 	/*
 		Database, err := database.NewDatabase("mysql",
 			databaseConfig.Username, databaseConfig.Password, databaseConfig.Address,
 			databaseConfig.DatabaseName)
 	*/
+
 	database, err := database.NewDatabase("mysql",
 		"root", "123jonathan123100300!!!", "localhost:3306",
 		"testers")
@@ -36,9 +40,10 @@ func main() {
 		log.Printf("Error received : %s\n", err.Error())
 		return
 	}
+
 	router := router.NewRouterInstance()
 	handlers := handlers.NewHttpHandlers(database, router, logger)
 	handlers.RegisterAllHandlers()
 	fmt.Println("Server starting at localhost:8080")
-	router.Start()
+	router.Start(config.LoadPort())
 }
