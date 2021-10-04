@@ -44,6 +44,7 @@ func main() {
 	router := router.NewRouterInstance()
 	handlers := handlers.NewHttpHandlers(database, router, logger)
 	handlers.RegisterAllHandlers()
-	fmt.Println("Server starting at localhost:8080")
-	router.Start(config.LoadPort())
+	port := config.LoadPort()
+	fmt.Println("Server starting at "+ port)
+	router.Start(port)
 }
