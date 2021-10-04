@@ -18,3 +18,7 @@ func LoadDatabaseConfiguration() (databaseConfig, error) {
 	return result, nil
 
 }
+
+func GetPort() string{
+ 	return os.Getenv("PORT")
+}
