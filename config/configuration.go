@@ -11,14 +11,13 @@ type databaseConfig struct {
 
 func LoadDatabaseConfiguration() (databaseConfig, error) {
 	var result databaseConfig
-	result.Username = os.Getenv("USER_NAME")
-	result.Password = os.Getenv("PASSWORD")
-	result.Address = os.Getenv("ADRESS")
-	result.Address = os.Getenv("DATABASE_NAME")
+	result.Username = os.Getenv("DB_USER")
+	result.Password = os.Getenv("DB_PASS")
+	result.Address = os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT")
+	result.DatabaseName = "order-validator"
 	return result, nil
 
 }
-
 func LoadPort() string {
 	return os.Getenv("PORT")
 }

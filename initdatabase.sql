@@ -1,6 +1,4 @@
-use testers;
-drop table requirements;
-drop table orders;
+CREATE DATABASE order-validator;
 
 CREATE TABLE orders(
 id integer PRIMARY KEY,
